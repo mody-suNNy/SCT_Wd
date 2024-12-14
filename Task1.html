@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Navigation Menu</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f0f0, #eaeaea);
+        }
+
+        /* Navbar styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: #333;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .navbar.scrolled {
+            background-color: #444;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar.inactive {
+            background-color: #6A1B9A;
+        }
+
+        /* Navbar links */
+        .navbar a {
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s, transform 0.2s;
+        }
+
+        /* Different colors for different menu items */
+        .navbar a:nth-child(1) {
+            background-color: #FF6347; /* Home item color */
+        }
+
+        .navbar a:nth-child(2) {
+            background-color: #1E90FF; /* About item color */
+        }
+
+        .navbar a:nth-child(3) {
+            background-color: #32CD32; /* Services item color */
+        }
+
+        .navbar a:nth-child(4) {
+            background-color: #FFD700; /* Contact item color */
+        }
+
+        .navbar a:hover {
+            background-color: #FFD700;
+            color: #333;
+            transform: scale(1.1);
+        }
+
+        .navbar a.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        /* Content and section styles */
+        .content {
+            margin-top: 80px;
+            padding: 20px;
+        }
+
+        section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #333;
+        }
+
+        /* Different colors for sections */
+        section:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        section:nth-child(even) {
+            background-color: #efefef;
+        }
+
+        /* Specific background colors for each section */
+        #section1 {
+            background-color: #FF6347; /* Home section */
+        }
+
+        #section2 {
+            background-color: #1E90FF; /* About section */
+        }
+
+        #section3 {
+            background-color: #32CD32; /* Services section */
+        }
+
+        #section4 {
+            background-color: #FFD700; /* Contact section */
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar" id="navbar">
+        <a href="#section1" class="active">Home</a>
+        <a href="#section2">About</a>
+        <a href="#section3">Services</a>
+        <a href="#section4">Contact</a>
+    </div>
+
+    <div class="content">
+        <section id="section1">Home Section</section>
+        <section id="section2">About Section</section>
+        <section id="section3">Services Section</section>
+        <section id="section4">Contact Section</section>
+    </div>
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        const links = navbar.querySelectorAll('a');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') {
+                navbar.classList.add('inactive');
+            } else {
+                navbar.classList.remove('inactive');
+            }
+        });
+
+        links.forEach(link => {
+            link.addEventListener('click', () => {
+                links.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

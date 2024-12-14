@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do Web App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .todo-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .task {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #fafafa;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .task.completed {
+            text-decoration: line-through;
+            background-color: #d3ffd3;
+        }
+
+        .task .task-text {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+
+        .task button {
+            padding: 5px 10px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .task button.edit {
+            background-color: #FF9800;
+        }
+
+        .task button.delete {
+            background-color: #f44336;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .add-task-form {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        .date-time {
+            margin-top: 10px;
+        }
+
+        .completed-tasks {
+            margin-top: 20px;
+            font-size: 1.2rem;
+        }
+
+        .edit-input {
+            padding: 5px;
+            margin-left: 10px;
+            border: 1px solid #ccc;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>To-Do Web App</h1>
+    <div class="todo-container">
+        <div class="add-task-form">
+            <input type="text" id="task-input" placeholder="Enter new task" />
+            <input type="datetime-local" id="task-datetime" class="date-time" />
+            <button id="add-task-btn">Add Task</button>
+        </div>
+
+        <ul class="task-list" id="task-list"></ul>
+        <div class="completed-tasks" id="completed-tasks"></div>
+    </div>
+
+    <script>
+        // Elements
+        const taskInput = document.getElementById('task-input');
+        const taskDatetime = document.getElementById('task-datetime');
+        const addTaskBtn = document.getElementById('add-task-btn');
+        const taskList = document.getElementById('task-list');
+        const completedTasksDiv = document.getElementById('completed-tasks');
+
+        let tasks = [];
+        
+        // Function to update the task list display
+        function updateTaskList() {
+            taskList.innerHTML = '';
+            tasks.forEach((task, index) => {
+                const li = document.createElement('li');
+                li.className = `task ${task.completed ? 'completed' : ''}`;
+                
+                const taskText = document.createElement('span');
+                taskText.className = 'task-text';
+                taskText.textContent = `${task.name} - ${task.dateTime}`;
+
+                const editBtn = document.createElement('button');
+                editBtn.className = 'edit';
+                editBtn.textContent = 'Edit';
+                editBtn.onclick = () => editTask(index);
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete';
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.onclick = () => deleteTask(index);
+
+                const completeBtn = document.createElement('button');
+                completeBtn.textContent = task.completed ? 'Undo' : 'Complete';
+                completeBtn.onclick = () => toggleCompleteTask(index);
+
+                li.appendChild(taskText);
+                li.appendChild(editBtn);
+                li.appendChild(deleteBtn);
+                li.appendChild(completeBtn);
+
+                taskList.appendChild(li);
+            });
+
+            // Show Completed Tasks Count
+            const completedCount = tasks.filter(task => task.completed).length;
+            completedTasksDiv.textContent = `Completed tasks: ${completedCount}`;
+        }
+
+        // Function to add a new task
+        function addTask() {
+            const taskName = taskInput.value.trim();
+            const taskDateTime = taskDatetime.value;
+
+            if (taskName && taskDateTime) {
+                tasks.push({
+                    name: taskName,
+                    dateTime: taskDateTime,
+                    completed: false
+                });
+
+                taskInput.value = '';
+                taskDatetime.value = '';
+                updateTaskList();
+            } else {
+                alert('Please fill in both task name and date/time.');
+            }
+        }
+
+        // Function to toggle task completion
+        function toggleCompleteTask(index) {
+            tasks[index].completed = !tasks[index].completed;
+            updateTaskList();
+        }
+
+        // Function to delete a task
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            updateTaskList();
+        }
+
+        // Function to edit a task
+        function editTask(index) {
+            const newTaskName = prompt('Edit your task:', tasks[index].name);
+            const newDateTime = prompt('Edit task date and time:', tasks[index].dateTime);
+
+            if (newTaskName && newDateTime) {
+                tasks[index].name = newTaskName;
+                tasks[index].dateTime = newDateTime;
+                updateTaskList();
+            }
+        }
+
+        // Event listeners
+        addTaskBtn.addEventListener('click', addTask);
+        taskInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addTask();
+        });
+
+        // Initial call to update the task list
+        updateTaskList();
+    </script>
+
+</body>
+</html>
